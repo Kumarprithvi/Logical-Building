@@ -1,0 +1,70 @@
+#include <stdio.h>
+
+char board[9] = {'1','2','3','4','5','6','7','8','9'};
+
+void displayBoard() {
+    printf("\n");
+    printf(" %c | %c | %c \n", board[0], board[1], board[2]);
+    printf("-----------\n");
+    printf(" %c | %c | %c \n", board[3], board[4], board[5]);
+    printf("-----------\n");
+    printf(" %c | %c | %c \n\n", board[6], board[7], board[8]);
+}
+
+int checkWin() {
+    int w[8][3] = {
+        {0,1,2}, {3,4,5}, {6,7,8},  // rows
+        {0,3,6}, {1,4,7}, {2,5,8},  // cols
+        {0,4,8}, {2,4,6}            // diagonals
+    };
+
+    for (int i = 0; i < 8; i++) {
+        if (board[w[i][0]] == board[w[i][1]] &&
+            board[w[i][1]] == board[w[i][2]])
+            return 1;
+    }
+    return 0;
+}
+
+int main() {
+    int player = 1, choice;
+    char mark;
+
+    while (1) {
+        displayBoard();
+        player = (player % 2) ? 1 : 2;
+        printf("Player %d, enter your choice: ", player);
+        scanf("%d", &choice);
+
+        mark = (player == 1) ? 'X' : 'O';
+
+        if (choice >= 1 && choice <= 9 && board[choice - 1] == ('0' + choice)) {
+            board[choice - 1] = mark;
+        } else {
+            printf("Invalid move! Try again.\n");
+            continue;
+        }
+
+        if (checkWin()) {
+            displayBoard();
+            printf("Player %d wins!\n", player);
+            break;
+        }
+
+        int full = 1;
+        for (int i = 0; i < 9; i++) {
+            if (board[i] == ('0' + i + 1))
+                full = 0;
+        }
+
+        if (full) {
+            displayBoard();
+            printf("It's a draw!\n");
+            break;
+        }
+
+        player++;
+    }
+
+    return 0;
+}
